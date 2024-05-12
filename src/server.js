@@ -9,18 +9,15 @@ import express from 'express'
 import { CONNECT_DB, CLOSE_DB } from './config/mongodb'
 import exitHook from 'async-exit-hook'
 import { env } from '~/config/environment'
+import { APIs_V1 } from './routes/v1'
 
 const START_SERVER = () => {
   const app = express()
 
-  const hostname = 'localhost'
-  const port = 8017
-  app.get('/', async (req, res) => {
-    console.log(process.env)
-    res.end('<h1>Hello World!</h1><hr>')
-  })
+  app.use('/v1', APIs_V1)
+
   app.listen(env.APP_PORT, env.APP_HOST, () => {
-    console.log(`3. Hi ${env.AUTHOR} Backend Server is running successfully at host http://${ hostname }:${ port }`)
+    console.log(`3. Hi ${env.AUTHOR} Backend Server is running successfully at host http://${ env.APP_HOST }:${ env.APP_PORT }`)
   })
 
   // Clean up server after shut down
