@@ -4,17 +4,17 @@
  * "A bit of fragrance clings to the hand that gives flowers!"
  */
 import { StatusCodes } from 'http-status-codes'
+import ApiError from '~/utils/ApiError'
 
 const createNew = async (req, res, next) => {
   try {
-    console.log('req.body: ', req.body)
-    console.log('req.query: ', req.query)
-    console.log('req.params: ', req.params)
+    // throw new ApiError()
+    // console.log('req.body: ', req.body)
+    // console.log('req.query: ', req.query)
+    // console.log('req.params: ', req.params)
     res.status(StatusCodes.CREATED).json({ message: 'POST from Controller: API created new board' })
   } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      errors: error.message
-    })
+    next(error)
   }
 }
 
