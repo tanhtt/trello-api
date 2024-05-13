@@ -10,6 +10,7 @@ import { CONNECT_DB, CLOSE_DB } from './config/mongodb'
 import exitHook from 'async-exit-hook'
 import { env } from '~/config/environment'
 import { APIs_V1 } from './routes/v1'
+import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware'
 
 const START_SERVER = () => {
   const app = express()
@@ -20,17 +21,21 @@ const START_SERVER = () => {
   // Use api v1
   app.use('/v1', APIs_V1)
 
+  // Define error-handling middleware
+  app.use(errorHandlingMiddleware)
+
   app.listen(env.APP_PORT, env.APP_HOST, () => {
     console.log(`3. Hi ${env.AUTHOR} Backend Server is running successfully at host http://${ env.APP_HOST }:${ env.APP_PORT }`)
   })
 
   // Clean up server after shut down
-  //https://stackoverflow.com/questions/14031763/doing-a-cleanup-action-just-before-node-js-exits
+  // https://stackoverflow.com/questions/14031763/doing-a-cleanup-action-just-before-node-js-exits
   exitHook(() => {
     console.log('4. Server is shuting down')
     CLOSE_DB()
     console.log('5. Disconnected from MongoDB')
-})
+  })
+
 }
 
 // Only connected Mongodb then start server backend
